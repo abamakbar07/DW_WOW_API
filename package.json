@@ -1,0 +1,32 @@
+{
+  "name": "wow_api",
+  "version": "1.0.0",
+  "description": "api untuk aplikasi wow",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abamakbar07/DW_WOW_API.git"
+  },
+  "keywords": [
+    "api",
+    "wow"
+  ],
+  "author": "Muhamad Akbar Afriansyah",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abamakbar07/DW_WOW_API/issues"
+  },
+  "homepage": "https://github.com/abamakbar07/DW_WOW_API#readme",
+  "dependencies": {
+    "Express": "^3.0.1",
+    "body-parser": "^1.19.0",
+    "demon": "^1.4.4",
+    "mysql2": "^2.2.5",
+    "nodemon": "^2.0.7",
+    "sequelize": "^6.5.0",
+    "sequelize-cli": "^6.2.0"
+  }
+}
