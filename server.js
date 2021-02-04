@@ -6,7 +6,7 @@ const router = require("./src/routes");
 
 
 app.use(bodyParser.json());
-app.use("/", router);
+app.use("/api/v1/", router);
 const port = 5000;
 
 
