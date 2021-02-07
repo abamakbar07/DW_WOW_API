@@ -16,7 +16,9 @@ const {
 
 const {
    addTransaction,
-   editTransaction
+   editTransaction,
+   getTransaction,
+   getTransactions
 } = require("../controllers/transactions");
 
 router.get("/users", getUsers);
@@ -28,6 +30,8 @@ router.post("/book", addBook);
 router.patch("/book/:id", editBook);
 router.delete("/book/:id", deleteBook);
 
+router.get("/transactions", getTransactions);
+router.get("/transaction/:id", getTransaction);
 router.post("/transaction", addTransaction);
 router.patch("/transaction/:id", editTransaction);
 

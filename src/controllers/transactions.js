@@ -14,21 +14,21 @@ exports.addTransaction = async (req, res) => {
       });
 
       const users = await User.findOne({
-        where: {
-          id: req.body.userId,
-        },
-        attributes: {
-          exclude: ["email", "createdAt", "updatedAt"],
-        },
+         where: {
+            id: req.body.userId,
+         },
+         attributes: {
+            exclude: ["email", "createdAt", "updatedAt"],
+         },
       });
 
       await (transaction["users"] = users);
 
       res.send({
-        status: "success",
-        data: {
-          transaction: transaction,
-        },
+         status: "success",
+         data: {
+            transaction: transaction,
+         },
       });
 
    } catch (err) {
@@ -39,16 +39,18 @@ exports.addTransaction = async (req, res) => {
    }
 }
 
-exports.editTransaction = async (req,res) => {
+exports.editTransaction = async (req, res) => {
    try {
-      const { id } = req.params
+      const {
+         id
+      } = req.params
       const transaction = await Transactions.findOne({
-        where: {
-          id,
-        },
-        attributes: {
-          exclude: ["userId", "UserId"],
-        },
+         where: {
+            id,
+         },
+         attributes: {
+            exclude: ["userId", "UserId"],
+         },
       });
 
       if (!transaction) {
@@ -58,18 +60,18 @@ exports.editTransaction = async (req,res) => {
       }
 
       await Transactions.update(req.body, {
-        where: {
-          id,
-        }
+         where: {
+            id,
+         }
       });
 
       const transactionUpdated = await Transactions.findOne({
-        where: {
-          id,
-        },
-        attributes: {
-          exclude: ["createdAt", "updatedAt", "userId", "UserId"],
-        },
+         where: {
+            id,
+         },
+         attributes: {
+            exclude: ["createdAt", "updatedAt", "userId", "UserId"],
+         },
       });
 
       const users = await User.findOne({
@@ -84,16 +86,109 @@ exports.editTransaction = async (req,res) => {
       await (transactionUpdated["users"] = users);
 
       res.send({
-        status: "success",
-        data: {
-          transaction: transactionUpdated,
-        },
+         status: "success",
+         data: {
+            transaction: transactionUpdated,
+         },
       });
-      
+
    } catch (err) {
       console.log(err);
       res.status(500).send({
-        message: "Server Error",
+         message: "Server Error",
+      });
+   }
+}
+
+exports.getTransaction = async (req, res) => {
+   try {
+      const {
+         id
+      } = req.params
+
+      const transaction = await Transactions.findOne({
+         where: {
+            id,
+         },
+         attributes: {
+            exclude: ["createdAt", "updatedAt", "userId", "UserId"],
+         },
+      });
+
+      if (!transaction) {
+         return res.status(400).send({
+            message: `Transaction with id ${id} Not Existed`,
+         });
+      }
+
+      const users = await User.findOne({
+         where: {
+            id: transaction.users,
+         },
+         attributes: {
+            exclude: ["email", "createdAt", "updatedAt"],
+         },
+      });
+
+      await (transaction["users"] = users);
+
+      res.send({
+         status: "success",
+         data: {
+            transaction,
+         }
+      })
+
+   } catch (err) {
+      console.log(err);
+      res.status(500).send({
+         message: "Server Error",
+      });
+   }
+}
+
+exports.getTransactions = async (req, res) => {
+   try {
+      const transaction = await Transactions.findAll({
+         attributes: {
+            exclude: ["createdAt", "updatedAt", "userId", "UserId"],
+         },
+      });
+
+      // const users = await User.findOne({
+      //   where: {
+      //     id: transaction.users,
+      //   },
+      //   attributes: {
+      //     exclude: ["email", "createdAt", "updatedAt"],
+      //   },
+      // });
+
+      // await (transaction["users"] = users);
+
+      for (i = 0; i < transaction.length; i++) {
+         const user = await User.findOne({
+            where: {
+               id: transaction[i].users,
+            },
+            attributes: {
+               exclude: ["email", "createdAt", "updatedAt"],
+            },
+         });
+         transaction[i].users = user
+      }
+
+      res.send({
+         status: "success",
+         data: {
+            transaction: transaction
+         },
+      });
+
+   } catch (err) {
+      console.log(err);
+      res.status(500).send({
+         message: "Server Error",
       });
    }
 }
