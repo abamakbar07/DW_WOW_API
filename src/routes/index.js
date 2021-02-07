@@ -15,7 +15,8 @@ const {
 } = require("../controllers/books");
 
 const {
-   addTransaction
+   addTransaction,
+   editTransaction
 } = require("../controllers/transactions");
 
 router.get("/users", getUsers);
@@ -28,5 +29,6 @@ router.patch("/book/:id", editBook);
 router.delete("/book/:id", deleteBook);
 
 router.post("/transaction", addTransaction);
+router.patch("/transaction/:id", editTransaction);
 
 module.exports = router;

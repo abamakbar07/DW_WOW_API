@@ -22,17 +22,12 @@ exports.addTransaction = async (req, res) => {
         },
       });
 
+      await (transaction["users"] = users);
+
       res.send({
         status: "success",
         data: {
-          transaction: {
-            id: transaction.id,
-            users,
-            transferProof: transaction.transferProof,
-            remainingActive: transaction.remainingActive,
-            userStatus: transaction.userStatus,
-            paymentStatus: transaction.paymentStatus,
-          },
+          transaction: transaction,
         },
       });
 
@@ -40,6 +35,65 @@ exports.addTransaction = async (req, res) => {
       console.log(err);
       res.status(500).send({
          message: "Server Error",
+      });
+   }
+}
+
+exports.editTransaction = async (req,res) => {
+   try {
+      const { id } = req.params
+      const transaction = await Transactions.findOne({
+        where: {
+          id,
+        },
+        attributes: {
+          exclude: ["userId", "UserId"],
+        },
+      });
+
+      if (!transaction) {
+         return res.send({
+            message: `Transaction with id ${id} Not Existed`,
+         })
+      }
+
+      await Transactions.update(req.body, {
+        where: {
+          id,
+        }
+      });
+
+      const transactionUpdated = await Transactions.findOne({
+        where: {
+          id,
+        },
+        attributes: {
+          exclude: ["createdAt", "updatedAt", "userId", "UserId"],
+        },
+      });
+
+      const users = await User.findOne({
+         where: {
+            id: transactionUpdated.users,
+         },
+         attributes: {
+            exclude: ["email", "createdAt", "updatedAt"],
+         },
+      });
+
+      await (transactionUpdated["users"] = users);
+
+      res.send({
+        status: "success",
+        data: {
+          transaction: transactionUpdated,
+        },
+      });
+      
+   } catch (err) {
+      console.log(err);
+      res.status(500).send({
+        message: "Server Error",
       });
    }
 }
