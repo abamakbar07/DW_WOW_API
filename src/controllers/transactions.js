@@ -9,8 +9,8 @@ exports.addTransaction = async (req, res) => {
          users: req.body.userId,
          transferProof: req.body.transferProof,
          remainingActive: 30,
-         userStatus: "Active",
-         paymentStatus: "Approved",
+         userStatus: "Not Active",
+         paymentStatus: "Pending",
       });
 
       const users = await User.findOne({
@@ -18,7 +18,7 @@ exports.addTransaction = async (req, res) => {
             id: req.body.userId,
          },
          attributes: {
-            exclude: ["email", "createdAt", "updatedAt"],
+            exclude: ["email", "createdAt", "updatedAt", "password"],
          },
       });
 
@@ -79,7 +79,7 @@ exports.editTransaction = async (req, res) => {
             id: transactionUpdated.users,
          },
          attributes: {
-            exclude: ["email", "createdAt", "updatedAt"],
+            exclude: ["email", "createdAt", "updatedAt", "password"],
          },
       });
 
@@ -126,7 +126,7 @@ exports.getTransaction = async (req, res) => {
             id: transaction.users,
          },
          attributes: {
-            exclude: ["email", "createdAt", "updatedAt"],
+            exclude: ["email", "createdAt", "updatedAt", "password"],
          },
       });
 
@@ -172,7 +172,7 @@ exports.getTransactions = async (req, res) => {
                id: transaction[i].users,
             },
             attributes: {
-               exclude: ["email", "createdAt", "updatedAt"],
+               exclude: ["email", "createdAt", "updatedAt", "password"],
             },
          });
          transaction[i].users = user
